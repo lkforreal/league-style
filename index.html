@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
     <script id="tailwind-config">
         tailwind.config = {
@@ -26,7 +26,7 @@
         }
     </script>
     <style>
-        /* Sistema de Variáveis CSS para proteger o seu layout */
+        /* Sistema de Variáveis CSS */
         :root {
             --primary-color: #A855F7;
             --primary-glow: rgba(168, 85, 247, 0.25);
@@ -35,7 +35,7 @@
             
             --bg-color: #121212;
             --surface-color: #1a1a1a;
-            --text-main: #d1d5db; /* gray-300 */
+            --text-main: #d1d5db; 
             --text-white: #ffffff;
             --border-color: rgba(255, 255, 255, 0.05);
             --hover-bg: rgba(255, 255, 255, 0.05);
@@ -61,24 +61,66 @@
         .btn-glow { box-shadow: 0 0 30px var(--primary-glow); }
         .btn-glow:hover { box-shadow: 0 0 40px var(--primary-glow-strong); }
 
+        /* Animação do 3-2-1 Melhorada e Ajustada para 0.9s */
         @keyframes pulse-countdown {
-            0% { transform: scale(0.5); opacity: 0; }
-            15% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(0.85); opacity: 0; }
+            0% { transform: scale(0.5); opacity: 0; filter: blur(4px); }
+            20% { transform: scale(1.1); opacity: 1; filter: blur(0); }
+            80% { transform: scale(0.95); opacity: 1; }
+            100% { transform: scale(0.8); opacity: 0; }
         }
         .animate-pulse-countdown {
-            animation: pulse-countdown 1s ease-out forwards;
+            animation: pulse-countdown 0.9s ease-out forwards;
+        }
+
+        @keyframes pop-word {
+            0% { transform: scale(0.8); opacity: 0; filter: blur(4px); }
+            100% { transform: scale(1); opacity: 1; filter: blur(0); }
+        }
+        .animate-pop {
+            animation: pop-word 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Estilização para as barras de rolagem nativas (Progresso e Volume) */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+        }
+        input[type=range]:focus {
+            outline: none;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            cursor: pointer;
+            margin-top: -4px;
+            box-shadow: 0 0 10px var(--primary-glow-strong);
+            transition: transform 0.1s;
+        }
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: var(--border-color);
+            border-radius: 2px;
         }
     </style>
 </head>
 
 <body class="bg-background text-[var(--text-main)] font-sans h-[100dvh] flex flex-col items-center overflow-hidden selection:bg-primary/30 transition-colors duration-300">
 
-    <!-- ONBOARDING (TOUR INICIAL) -->
+    <!-- ONBOARDING (GUIA ATUALIZADO 4 PASSOS) -->
     <div id="onboarding-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[3000] flex items-center justify-center opacity-0 invisible transition-all duration-500">
         <div class="bg-surface w-full max-w-[340px] rounded-[32px] p-8 border border-[var(--border-color)] shadow-2xl mx-4 relative overflow-hidden flex flex-col items-center">
             
-            <!-- Step 1 -->
             <div id="ob-step-1" class="w-full flex flex-col items-center transition-all duration-300">
                 <div class="w-16 h-16 rounded-full bg-[var(--primary-bg)] flex items-center justify-center mb-6">
                     <span class="material-symbols-outlined text-4xl text-primary" style="filter: drop-shadow(0 0 10px var(--primary-glow-strong));">mic</span>
@@ -88,7 +130,6 @@
                 <button onclick="nextStep(2)" class="w-full h-12 rounded-xl bg-primary text-onPrimary font-bold text-sm btn-glow transition-all active:scale-95 uppercase tracking-wider">COMEÇAR TOUR</button>
             </div>
 
-            <!-- Step 2 -->
             <div id="ob-step-2" class="w-full flex flex-col items-center hidden transition-all duration-300">
                 <div class="w-16 h-16 rounded-full bg-[var(--primary-bg)] flex items-center justify-center mb-6">
                     <span class="material-symbols-outlined text-4xl text-primary" style="filter: drop-shadow(0 0 10px var(--primary-glow-strong));">timer</span>
@@ -101,19 +142,30 @@
                 </div>
             </div>
 
-            <!-- Step 3 -->
             <div id="ob-step-3" class="w-full flex flex-col items-center hidden transition-all duration-300">
+                <div class="w-16 h-16 rounded-full bg-[var(--primary-bg)] flex items-center justify-center mb-6">
+                    <span class="material-symbols-outlined text-4xl text-primary" style="filter: drop-shadow(0 0 10px var(--primary-glow-strong));">queue_music</span>
+                </div>
+                <h2 class="text-2xl font-bold text-[var(--text-white)] text-center mb-3">Sua Vibe</h2>
+                <p class="text-[13px] text-textGray text-center mb-8 leading-relaxed">Cole links do <strong>YouTube</strong> ou use os botões de <strong>Sugestões</strong>. Você pode controlar o volume, pular o beat e até travar uma única batida no <strong>Loop</strong>.</p>
+                <div class="w-full flex gap-3">
+                    <button onclick="closeOnboarding()" class="flex-1 h-12 rounded-xl bg-transparent border border-[var(--border-color)] text-textGray font-bold text-xs hover:bg-[var(--hover-bg)] transition-all active:scale-95 uppercase tracking-wider">Pular</button>
+                    <button onclick="nextStep(4)" class="flex-1 h-12 rounded-xl bg-primary text-onPrimary font-bold text-xs btn-glow transition-all active:scale-95 uppercase tracking-wider">Próximo</button>
+                </div>
+            </div>
+
+            <div id="ob-step-4" class="w-full flex flex-col items-center hidden transition-all duration-300">
                 <div class="w-16 h-16 rounded-full bg-[var(--primary-bg)] flex items-center justify-center mb-6">
                     <span class="material-symbols-outlined text-4xl text-primary" style="filter: drop-shadow(0 0 10px var(--primary-glow-strong));">palette</span>
                 </div>
                 <h2 class="text-2xl font-bold text-[var(--text-white)] text-center mb-3">Seu Estilo</h2>
-                <p class="text-sm text-textGray text-center mb-8 leading-relaxed">Clique no ícone de <strong>Paleta</strong> no topo da tela a qualquer momento para personalizar o tema (claro/escuro) e as cores de destaque.</p>
+                <p class="text-sm text-textGray text-center mb-8 leading-relaxed">Clique no ícone de <strong>Paleta</strong> no topo da tela a qualquer momento para personalizar o tema (claro/escuro) e a sua cor de destaque.</p>
                 <button onclick="closeOnboarding()" class="w-full h-12 rounded-xl bg-primary text-onPrimary font-bold text-sm btn-glow transition-all active:scale-95 uppercase tracking-wider">VAMOS LÁ!</button>
             </div>
 
-            <!-- Dots -->
             <div class="flex justify-center gap-2 mt-8" id="ob-dots">
                 <div class="w-4 h-1.5 rounded-full bg-primary transition-all duration-300"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-[var(--border-color)] transition-all duration-300"></div>
                 <div class="w-1.5 h-1.5 rounded-full bg-[var(--border-color)] transition-all duration-300"></div>
                 <div class="w-1.5 h-1.5 rounded-full bg-[var(--border-color)] transition-all duration-300"></div>
             </div>
@@ -121,8 +173,8 @@
     </div>
 
     <!-- Overlay de Countdown -->
-    <div id="countdown-overlay" class="fixed inset-0 bg-background/80 backdrop-blur-md flex items-center justify-center z-[1000] opacity-0 invisible transition-all duration-300">
-        <div id="countdown-text" class="text-[10rem] font-black text-primary text-glow-strong">3</div>
+    <div id="countdown-overlay" class="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center z-[1000] opacity-0 invisible transition-all duration-300">
+        <div id="countdown-text" class="text-[10rem] md:text-[15rem] font-black text-primary text-glow-strong">3</div>
     </div>
 
     <!-- MODAL DE CONFIGURAÇÕES -->
@@ -136,7 +188,6 @@
             </div>
 
             <div class="space-y-6">
-                <!-- Tema -->
                 <div class="space-y-3">
                     <span class="text-[10px] font-bold tracking-wider text-textGray uppercase">Tema do Sistema</span>
                     <div class="flex p-1 gap-1 rounded-xl bg-[var(--border-color)] border border-[var(--border-color)]">
@@ -145,7 +196,6 @@
                     </div>
                 </div>
 
-                <!-- Cores -->
                 <div class="space-y-3">
                     <span class="text-[10px] font-bold tracking-wider text-textGray uppercase">Cor de Destaque</span>
                     <div class="flex justify-between gap-2">
@@ -160,132 +210,419 @@
         </div>
     </div>
 
-    <!-- Header (Com botões Ajuda e Paleta de Temas) -->
-    <header class="w-full flex justify-between items-center px-6 h-14 max-w-[480px] mx-auto shrink-0">
-        <span class="text-lg font-bold tracking-tight text-primary">3-2-1 | by @lkforeal</span>
-        <div class="flex items-center gap-4 text-textGray">
-            <button id="btn-help" class="hover:text-primary transition-colors active:scale-95 duration-200">
-                <span class="material-symbols-outlined text-[24px]">help</span>
+    <!-- WRAPPER RESPONSIVO -->
+    <div class="w-full h-full flex flex-col md:max-w-[1024px] mx-auto relative overflow-hidden">
+        
+        <!-- HEADER -->
+        <header id="main-header" class="w-full flex justify-between items-center px-6 h-14 md:h-20 shrink-0 transition-opacity duration-300">
+            <span class="text-lg md:text-xl font-bold tracking-tight text-primary">3-2-1 | by @lkforeal</span>
+            <div class="flex items-center gap-4 md:gap-6 text-textGray">
+                <button id="btn-help" class="hover:text-primary transition-colors active:scale-95 duration-200" title="Ajuda / Tutorial">
+                    <span class="material-symbols-outlined text-[24px] md:text-[28px]">help</span>
+                </button>
+                <button id="btn-settings" class="hover:text-primary transition-colors active:scale-95 duration-200" title="Tema e Cores">
+                    <span class="material-symbols-outlined text-[24px] md:text-[28px]">palette</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- TELA 1: TIMER -->
+        <main id="screen-timer" class="flex-1 w-full px-6 py-2 md:py-8 flex flex-col md:flex-row items-center md:items-center justify-center gap-6 md:gap-16 z-10 relative overflow-y-auto no-scrollbar transition-all duration-300">
+            
+            <!-- CONTROLES ESQUERDA/BAIXO -->
+            <div id="config-section" class="w-full max-w-[400px] md:w-[320px] order-2 md:order-1 space-y-4 md:space-y-6 transition-all duration-300">
+                
+                <!-- INPUT YOUTUBE COM SUGESTÕES -->
+                <div id="yt-input-container" class="space-y-3 p-3 bg-surface border border-[var(--border-color)] rounded-2xl shadow-sm transition-all duration-300">
+                    <span class="text-[9px] md:text-[11px] font-bold tracking-wider text-textGray uppercase flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[14px]">headphones</span> Trilha Sonora
+                    </span>
+                    
+                    <div class="flex gap-2">
+                        <input type="text" id="yt-input" class="flex-1 w-full bg-background border border-[var(--border-color)] rounded-xl px-3 py-2 text-xs text-[var(--text-white)] placeholder-gray-500 outline-none focus:border-primary transition-colors" placeholder="Link YouTube (Beat/Playlist)" autocomplete="off">
+                        <button id="yt-load-btn" class="bg-[var(--primary-bg)] text-primary px-3 rounded-xl hover:bg-primary hover:text-onPrimary transition-all active:scale-95 flex items-center justify-center border border-transparent">
+                            <span class="material-symbols-outlined text-[20px]">search</span>
+                        </button>
+                    </div>
+
+                    <!-- Botões de Sugestão Rápida -->
+                    <div class="flex gap-1.5 pt-1">
+                        <button onclick="loadSuggestion('https://www.youtube.com/watch?v=AhDYVkzWbkk&list=PLG7CRWg1zCsNg1Wg6tahpAwZxGBhX-sKO&pp=0gcJCbcEOCosWNin')" class="flex-1 py-1.5 rounded-lg border border-[var(--border-color)] bg-background hover:bg-[var(--hover-bg)] hover:text-primary transition-colors text-[10px] font-medium text-textGray active:scale-95">Playlist 1</button>
+                        <button onclick="loadSuggestion('https://www.youtube.com/watch?v=qsODzlRiaUE&list=PLb0TiqSrBSE76dCXv4eeA1ybNkL8Mn5Pp')" class="flex-1 py-1.5 rounded-lg border border-[var(--border-color)] bg-background hover:bg-[var(--hover-bg)] hover:text-primary transition-colors text-[10px] font-medium text-textGray active:scale-95">Playlist 2</button>
+                        <button onclick="loadSuggestion('https://www.youtube.com/watch?v=OA7mWH84I90&list=PLpRe_xtYAPkEUfoiy-rkunWQInVq8rJUX')" class="flex-1 py-1.5 rounded-lg border border-[var(--border-color)] bg-background hover:bg-[var(--hover-bg)] hover:text-primary transition-colors text-[10px] font-medium text-textGray active:scale-95">Playlist 3</button>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <span class="text-[9px] md:text-[11px] font-bold tracking-wider text-textGray uppercase">Selecionar Tempo</span>
+                    <div class="flex justify-between gap-2">
+                        <button id="btn-1m" class="flex-1 py-1.5 md:py-3 rounded-xl border border-transparent bg-surface text-[var(--text-main)] hover:bg-[var(--hover-bg)] transition-all active:scale-95 text-xs md:text-sm font-medium">1 Min</button>
+                        <button id="btn-5m" class="flex-1 py-1.5 md:py-3 rounded-xl border border-primary bg-[var(--primary-bg)] text-primary transition-all active:scale-95 text-xs md:text-sm font-medium">5 Min</button>
+                        <button id="btn-10m" class="flex-1 py-1.5 md:py-3 rounded-xl border border-transparent bg-surface text-[var(--text-main)] hover:bg-[var(--hover-bg)] transition-all active:scale-95 text-xs md:text-sm font-medium">10 Min</button>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <span class="text-[9px] md:text-[11px] font-bold tracking-wider text-textGray uppercase">Dificuldade</span>
+                    <div class="flex p-1 gap-1 rounded-xl bg-surface border border-[var(--border-color)]">
+                        <button id="btn-easy" class="flex-1 py-1.5 md:py-2.5 rounded-lg bg-primary text-onPrimary shadow-lg transition-all text-xs md:text-sm font-bold">Easy</button>
+                        <button id="btn-hard" class="flex-1 py-1.5 md:py-2.5 rounded-lg text-textGray hover:text-[var(--text-main)] transition-all text-xs md:text-sm font-medium">Hard</button>
+                    </div>
+                </div>
+
+                <div class="w-full h-px bg-[var(--border-color)] my-1 md:my-4"></div>
+
+                <div class="flex flex-col items-center md:items-start space-y-1 pb-1">
+                    <div class="flex items-center gap-2 text-xs md:text-sm text-textGray">
+                        <span class="material-symbols-outlined text-[14px] md:text-[18px]">cloud_off</span>
+                        <span id="status">Carregando dicionário...</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs md:text-sm text-textGray">
+                        <span class="material-symbols-outlined text-[14px] md:text-[18px]">text_snippet</span>
+                        <span id="mode-info">palavras a cada 10 segundos</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ÁREA DE FOCO DIREITA/CIMA -->
+            <div id="focus-area" class="w-full max-w-[400px] md:max-w-[450px] flex flex-col items-center justify-center gap-4 md:gap-8 order-1 md:order-2 transition-all duration-500">
+                
+                <!-- TIMER -->
+                <div class="relative w-44 h-44 md:w-72 md:h-72 flex items-center justify-center timer-glow rounded-full border-[5px] md:border-[8px] border-primary shrink-0 transition-all duration-300" id="timer-ring">
+                    <div class="text-center z-10 flex flex-col items-center justify-center mt-1">
+                        <h1 id="timer" class="text-4xl md:text-7xl font-bold tracking-tight text-[var(--text-white)] transition-colors" style="font-variant-numeric: tabular-nums;">05:00</h1>
+                        <p class="text-[9px] md:text-[12px] font-bold tracking-[0.1em] md:tracking-[0.2em] text-primary mt-1 md:mt-3 uppercase">RESTANTE</p>
+                    </div>
+                </div>
+
+                <!-- PALAVRA -->
+                <div id="word-display-container" class="w-full min-h-[5rem] md:min-h-[8rem] hidden items-center justify-center transition-all duration-300">
+                    <div id="word-display" class="text-4xl md:text-6xl font-black text-[var(--text-white)] transition-colors duration-300 text-center break-words uppercase tracking-widest" style="filter: drop-shadow(0 0 15px var(--primary-glow-strong));">
+                    </div>
+                </div>
+
+                <!-- YOUTUBE CUSTOM PLAYER PREMIUM -->
+                <div id="yt-custom-player" class="hidden w-full flex-col gap-2 py-3 px-4 bg-surface border border-[var(--border-color)] rounded-2xl shadow-xl transition-all duration-300">
+                    
+                    <div class="flex justify-between items-center px-1">
+                        <div class="flex items-center gap-2 overflow-hidden mr-4">
+                            <span class="material-symbols-outlined text-primary text-[18px] shrink-0">graphic_eq</span>
+                            <span id="yt-video-title" class="text-[10px] md:text-[11px] font-bold text-[var(--text-white)] tracking-wider truncate">CARREGANDO BEAT...</span>
+                        </div>
+                        <button id="yt-close-btn" class="text-textGray hover:text-red-500 transition-colors shrink-0" title="Remover Beat">
+                            <span class="material-symbols-outlined text-[18px]">close</span>
+                        </button>
+                    </div>
+
+                    <div class="flex items-center gap-2 px-1">
+                        <span id="yt-current-time" class="text-[9px] text-textGray font-medium w-8 text-right shrink-0">0:00</span>
+                        <input type="range" id="yt-progress" min="0" max="100" value="0" class="w-full">
+                        <span id="yt-duration" class="text-[9px] text-textGray font-medium w-8 shrink-0">0:00</span>
+                    </div>
+
+                    <div class="flex justify-between items-center px-2 mt-1">
+                        
+                        <div class="flex items-center gap-2 w-16 md:w-20 group">
+                            <span class="material-symbols-outlined text-textGray text-[14px]">volume_up</span>
+                            <input type="range" id="yt-volume" min="0" max="100" value="100" class="w-full opacity-50 group-hover:opacity-100 transition-opacity">
+                        </div>
+
+                        <div class="flex items-center gap-3 md:gap-5">
+                            <button id="yt-btn-shuffle" class="text-textGray hover:text-primary transition-colors active:scale-90" title="Aleatório"><span class="material-symbols-outlined text-[18px]">shuffle</span></button>
+                            <button id="yt-btn-prev" class="text-[var(--text-white)] hover:text-primary transition-colors active:scale-90" title="Anterior"><span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">skip_previous</span></button>
+                            
+                            <button id="yt-btn-play" class="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-primary text-onPrimary rounded-full hover:scale-105 active:scale-95 transition-all shadow-[0_0_15px_var(--primary-glow)]">
+                                <span id="yt-play-icon" class="material-symbols-outlined text-[24px] md:text-[28px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                            </button>
+                            
+                            <button id="yt-btn-next" class="text-[var(--text-white)] hover:text-primary transition-colors active:scale-90" title="Próxima"><span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">skip_next</span></button>
+                            
+                            <button id="yt-btn-loop" class="text-textGray hover:text-primary transition-colors active:scale-90" title="Repetir Beat Atual"><span class="material-symbols-outlined text-[18px]">repeat</span></button>
+                        </div>
+                        
+                        <div class="w-16 md:w-20"></div>
+                    </div>
+
+                    <div id="yt-player-wrapper" class="hidden"></div>
+                </div>
+
+                <button id="main-btn" disabled class="w-full h-12 md:h-16 rounded-xl md:rounded-2xl bg-primary text-onPrimary font-bold tracking-widest uppercase active:scale-95 transition-all btn-glow disabled:opacity-50 disabled:cursor-not-allowed border border-transparent flex items-center justify-center gap-2 text-sm md:text-lg">
+                    INICIAR
+                </button>
+            </div>
+        </main>
+
+        <!-- TELA 2: EM DESENVOLVIMENTO -->
+        <main id="screen-wip" class="hidden flex-1 w-full max-w-[400px] md:max-w-[600px] mx-auto px-6 py-2 flex-col items-center justify-center z-10 relative">
+            <div class="flex flex-col items-center justify-center p-8 md:p-12 rounded-[32px] bg-surface border border-[var(--border-color)] shadow-xl text-center w-full">
+                <div class="relative w-20 h-20 md:w-24 md:h-24 mb-6 flex items-center justify-center rounded-full bg-[var(--primary-bg)]">
+                    <span class="material-symbols-outlined text-4xl md:text-5xl text-primary animate-pulse" style="filter: drop-shadow(0 0 15px var(--primary-glow-strong));">construction</span>
+                </div>
+                <h2 class="text-xl md:text-3xl font-bold text-[var(--text-white)] tracking-wide mb-2 md:mb-4">Em Desenvolvimento</h2>
+                <p class="text-xs md:text-base text-textGray leading-relaxed">Esta tela está sendo forjada na oficina.<br>Novidades chegarão em breve!</p>
+            </div>
+        </main>
+
+        <!-- NAV INFERIOR -->
+        <nav id="bottom-nav" class="w-full max-w-[480px] md:max-w-[400px] mx-auto flex justify-around items-center h-14 md:h-16 px-4 bg-surface/50 backdrop-blur-xl rounded-t-[24px] md:rounded-[24px] border-t md:border border-[var(--border-color)] shrink-0 transition-opacity duration-300 md:mb-6 md:shadow-2xl">
+            <button id="nav-stats" class="flex flex-col items-center justify-center text-textGray hover:text-[var(--text-main)] w-14 md:w-16 h-12 md:h-14 active:scale-90 transition-all">
+                <span class="material-symbols-outlined text-[20px] md:text-[24px]">bar_chart</span>
+                <span class="text-[8px] md:text-[9px] font-medium uppercase tracking-wider mt-0.5 md:mt-1">Status</span>
             </button>
-            <button id="btn-settings" class="hover:text-primary transition-colors active:scale-95 duration-200">
-                <span class="material-symbols-outlined text-[24px]">palette</span>
+            
+            <button id="nav-timer" class="flex flex-col items-center justify-center bg-[var(--primary-bg)] text-primary rounded-xl md:rounded-2xl w-14 md:w-16 h-12 md:h-14 active:scale-90 transition-all">
+                <span class="material-symbols-outlined text-[20px] md:text-[24px]" style="font-variation-settings: 'FILL' 1;">timer</span>
+                <span class="text-[8px] md:text-[9px] font-bold uppercase tracking-wider mt-0.5 md:mt-1">Timer</span>
             </button>
-        </div>
-    </header>
 
-    <!-- TELA 1: TIMER (Principal) -->
-    <main id="screen-timer" class="flex-1 w-full max-w-[400px] px-6 py-2 flex flex-col items-center justify-evenly z-10 relative transition-all duration-300">
-        
-        <div class="relative w-48 h-48 flex items-center justify-center timer-glow rounded-full border-[5px] border-primary shrink-0 transition-all duration-300" id="timer-ring">
-            <div class="text-center z-10 flex flex-col items-center justify-center mt-1">
-                <h1 id="timer" class="text-5xl font-bold tracking-tight text-[var(--text-white)] transition-colors" style="font-variant-numeric: tabular-nums;">05:00</h1>
-                <p class="text-[9px] font-bold tracking-[0.1em] text-primary mt-1 uppercase">RESTANTE</p>
-            </div>
-        </div>
-
-        <div id="word-display-container" class="w-full min-h-[2.5rem] flex items-center justify-center">
-            <div id="word-display" class="text-3xl font-semibold text-[var(--text-white)] transition-colors text-center break-words lowercase tracking-wide">
-            </div>
-        </div>
-
-        <div class="w-full flex flex-col items-center">
-            <button id="main-btn" disabled class="w-full h-12 rounded-xl bg-primary text-onPrimary font-bold tracking-widest uppercase active:scale-95 transition-all btn-glow disabled:opacity-50 disabled:cursor-not-allowed border border-transparent flex items-center justify-center gap-2 text-sm">
-                INICIAR
+            <button id="nav-profile" class="flex flex-col items-center justify-center text-textGray hover:text-[var(--text-main)] w-14 md:w-16 h-12 md:h-14 active:scale-90 transition-all">
+                <span class="material-symbols-outlined text-[20px] md:text-[24px]">person</span>
+                <span class="text-[8px] md:text-[9px] font-medium uppercase tracking-wider mt-0.5 md:mt-1">Perfil</span>
             </button>
-        </div>
+        </nav>
+    </div>
 
-        <div class="w-full space-y-4 pt-1">
-            <div class="space-y-2">
-                <span class="text-[9px] font-bold tracking-wider text-textGray uppercase">Selecionar Tempo</span>
-                <div class="flex justify-between gap-2">
-                    <button id="btn-1m" class="flex-1 py-2 rounded-xl border border-transparent bg-surface text-[var(--text-main)] hover:bg-[var(--hover-bg)] transition-all active:scale-95 text-xs font-medium">
-                        1 Min
-                    </button>
-                    <button id="btn-5m" class="flex-1 py-2 rounded-xl border border-primary bg-[var(--primary-bg)] text-primary transition-all active:scale-95 text-xs font-medium">
-                        5 Min
-                    </button>
-                    <button id="btn-10m" class="flex-1 py-2 rounded-xl border border-transparent bg-surface text-[var(--text-main)] hover:bg-[var(--hover-bg)] transition-all active:scale-95 text-xs font-medium">
-                        10 Min
-                    </button>
-                </div>
-            </div>
-
-            <div class="space-y-2">
-                <span class="text-[9px] font-bold tracking-wider text-textGray uppercase">Dificuldade</span>
-                <div class="flex p-1 gap-1 rounded-xl bg-surface border border-[var(--border-color)]">
-                    <button id="btn-easy" class="flex-1 py-1.5 rounded-lg bg-primary text-onPrimary shadow-lg transition-all text-xs font-bold">
-                        Easy
-                    </button>
-                    <button id="btn-hard" class="flex-1 py-1.5 rounded-lg text-textGray hover:text-[var(--text-main)] transition-all text-xs font-medium">
-                        Hard
-                    </button>
-                </div>
-            </div>
-
-            <div class="w-full h-px bg-[var(--border-color)] my-2"></div>
-
-            <div class="flex flex-col items-center space-y-1 pb-2">
-                <div class="flex items-center gap-2 text-xs text-textGray">
-                    <span class="material-symbols-outlined text-[14px]">cloud_off</span>
-                    <span id="status">Carregando dicionário...</span>
-                </div>
-                <div class="flex items-center gap-2 text-xs text-textGray">
-                    <span class="material-symbols-outlined text-[14px]">text_snippet</span>
-                    <span id="mode-info">palavras a cada 10 segundos</span>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- TELA 2: EM DESENVOLVIMENTO (Oculta por padrão) -->
-    <main id="screen-wip" class="hidden flex-1 w-full max-w-[400px] px-6 py-2 flex-col items-center justify-center z-10 relative">
-        <div class="flex flex-col items-center justify-center p-8 rounded-[32px] bg-surface border border-[var(--border-color)] shadow-xl text-center w-full">
-            <div class="relative w-20 h-20 mb-6 flex items-center justify-center rounded-full bg-[var(--primary-bg)]">
-                <span class="material-symbols-outlined text-4xl text-primary animate-pulse" style="filter: drop-shadow(0 0 15px var(--primary-glow-strong));">construction</span>
-            </div>
-            <h2 class="text-xl font-bold text-[var(--text-white)] tracking-wide mb-2">Em Desenvolvimento</h2>
-            <p class="text-xs text-textGray leading-relaxed">Esta tela está sendo forjada na oficina.<br>Novidades chegarão em breve!</p>
-        </div>
-    </main>
-
-    <!-- Nav (Reorganizada para Status, Timer, Perfil) -->
-    <nav class="w-full max-w-[480px] mx-auto flex justify-around items-center h-16 px-4 bg-surface/50 backdrop-blur-xl rounded-t-[24px] border-t border-[var(--border-color)] shrink-0">
-        
-        <!-- Botão Status -->
-        <button id="nav-stats" class="flex flex-col items-center justify-center text-textGray hover:text-[var(--text-main)] w-14 h-12 active:scale-90 transition-all">
-            <span class="material-symbols-outlined text-[20px]">bar_chart</span>
-            <span class="text-[8px] font-medium uppercase tracking-wider mt-0.5">Status</span>
-        </button>
-        
-        <!-- Botão Timer (Ativo por padrão) -->
-        <button id="nav-timer" class="flex flex-col items-center justify-center bg-[var(--primary-bg)] text-primary rounded-xl w-14 h-12 active:scale-90 transition-all">
-            <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">timer</span>
-            <span class="text-[8px] font-bold uppercase tracking-wider mt-0.5">Timer</span>
-        </button>
-
-        <!-- Botão Perfil -->
-        <button id="nav-profile" class="flex flex-col items-center justify-center text-textGray hover:text-[var(--text-main)] w-14 h-12 active:scale-90 transition-all">
-            <span class="material-symbols-outlined text-[20px]">person</span>
-            <span class="text-[8px] font-medium uppercase tracking-wider mt-0.5">Perfil</span>
-        </button>
-        
-    </nav>
+    <!-- CARREGA A API DO YOUTUBE ASSINCRONAMENTE -->
+    <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-        // === TOUR INICIAL (ONBOARDING) ===
-        const btnHelp = document.getElementById('btn-help');
-
-        // Função para abrir o onboarding manualmente ou automaticamente
-        function openOnboarding() {
-            const onboarding = document.getElementById('onboarding-overlay');
-            onboarding.style.display = 'flex'; // Restaura o display
-            setTimeout(() => {
-                onboarding.classList.remove('opacity-0', 'invisible');
-            }, 10); // Pequeno atraso para a animação ocorrer
-            nextStep(1); // Força abrir no passo 1
+        // === FUNÇÃO DE FORMATAÇÃO DE TEMPO (CRONÔMETRO) ===
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const s = (seconds % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
         }
 
-        // Verifica na primeira inicialização
+        // === LÓGICA DO YOUTUBE PLAYER PREMIUM ===
+        let ytPlayer;
+        let isYtApiReady = false;
+        let isLooping = false; 
+        let isShuffled = false;
+        let progressInterval;
+
+        const ytInputContainer = document.getElementById('yt-input-container');
+        const ytInput = document.getElementById('yt-input');
+        const ytLoadBtn = document.getElementById('yt-load-btn');
+        
+        const ytCustomPlayer = document.getElementById('yt-custom-player');
+        const ytCloseBtn = document.getElementById('yt-close-btn');
+        const ytVideoTitle = document.getElementById('yt-video-title');
+        
+        const ytPlayIcon = document.getElementById('yt-play-icon');
+        const ytVolume = document.getElementById('yt-volume');
+        const ytProgress = document.getElementById('yt-progress');
+        const ytCurrentTimeText = document.getElementById('yt-current-time');
+        const ytDurationText = document.getElementById('yt-duration');
+
+        function loadSuggestion(url) {
+            ytInput.value = url;
+            ytLoadBtn.click();
+        }
+
+        function formatYTTime(timeInSeconds) {
+            if (isNaN(timeInSeconds) || timeInSeconds < 0) return "0:00";
+            const m = Math.floor(timeInSeconds / 60);
+            const s = Math.floor(timeInSeconds % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function onYouTubeIframeAPIReady() {
+            isYtApiReady = true;
+        }
+
+        function extractYouTubeID(url) {
+            const listMatch = url.match(/[?&]list=([a-zA-Z0-9_-]+)/);
+            if (listMatch) return { type: 'playlist', id: listMatch[1] };
+            const vidMatch = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+            if (vidMatch) return { type: 'video', id: vidMatch[1] };
+            return null;
+        }
+
+        function startProgressUpdate() {
+            clearInterval(progressInterval);
+            progressInterval = setInterval(() => {
+                if (ytPlayer && ytPlayer.getCurrentTime && ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+                    const current = ytPlayer.getCurrentTime();
+                    const duration = ytPlayer.getDuration();
+                    
+                    ytCurrentTimeText.textContent = formatYTTime(current);
+                    
+                    if (duration > 0) {
+                        ytProgress.max = duration;
+                        ytProgress.value = current;
+
+                        if (isLooping && (duration - current) <= 0.5) {
+                            ytPlayer.seekTo(0);
+                        }
+                    }
+                }
+            }, 250); 
+        }
+
+        function updateVideoInfo() {
+            if (ytPlayer && ytPlayer.getVideoData) {
+                const data = ytPlayer.getVideoData();
+                if (data && data.title) {
+                    ytVideoTitle.textContent = data.title;
+                }
+                const duration = ytPlayer.getDuration();
+                ytDurationText.textContent = formatYTTime(duration);
+                ytProgress.max = duration;
+            }
+        }
+
+        ytLoadBtn.addEventListener('click', () => {
+            if (!isYtApiReady) return alert("Aguarde a conexão com o YouTube...");
+            
+            const url = ytInput.value.trim();
+            if(!url) return;
+
+            const ytData = extractYouTubeID(url);
+            if(!ytData) {
+                ytInput.classList.add('border-red-500');
+                setTimeout(() => ytInput.classList.remove('border-red-500'), 1500);
+                return;
+            }
+
+            ytInputContainer.classList.add('hidden');
+            ytCustomPlayer.classList.replace('hidden', 'flex');
+            ytVideoTitle.textContent = "CARREGANDO BEAT...";
+
+            if (ytPlayer) ytPlayer.destroy();
+
+            document.getElementById('yt-player-wrapper').innerHTML = '<div id="yt-player-iframe"></div>';
+
+            const playerVars = { autoplay: 1, controls: 0, disablekb: 1, playsinline: 1 };
+            if(ytData.type === 'playlist') {
+                playerVars.listType = 'playlist';
+                playerVars.list = ytData.id;
+            }
+
+            ytPlayer = new YT.Player('yt-player-iframe', {
+                height: '1', width: '1', 
+                videoId: ytData.type === 'video' ? ytData.id : '',
+                playerVars: playerVars,
+                events: {
+                    'onReady': (event) => {
+                        event.target.playVideo();
+                        event.target.setVolume(ytVolume.value);
+                        ytPlayIcon.textContent = 'pause';
+                        setTimeout(updateVideoInfo, 1000); 
+                        startProgressUpdate();
+                    },
+                    'onStateChange': (event) => {
+                        if (event.data == YT.PlayerState.PLAYING) {
+                            ytPlayIcon.textContent = 'pause';
+                            updateVideoInfo();
+                            startProgressUpdate();
+                        } else if (event.data == YT.PlayerState.PAUSED) {
+                            ytPlayIcon.textContent = 'play_arrow';
+                            clearInterval(progressInterval);
+                        } else if (event.data == YT.PlayerState.ENDED) {
+                            if (isLooping) {
+                                ytPlayer.seekTo(0);
+                                ytPlayer.playVideo();
+                            } else {
+                                ytPlayIcon.textContent = 'play_arrow';
+                                clearInterval(progressInterval);
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        document.getElementById('yt-btn-play').addEventListener('click', () => {
+            if(!ytPlayer || !ytPlayer.getPlayerState) return;
+            if(ytPlayer.getPlayerState() === YT.PlayerState.PLAYING) {
+                ytPlayer.pauseVideo();
+            } else {
+                ytPlayer.playVideo();
+            }
+        });
+
+        document.getElementById('yt-btn-next').addEventListener('click', () => {
+            if(!ytPlayer) return;
+            if (isLooping && ytPlayer.seekTo) {
+                ytPlayer.seekTo(0, true);
+                ytPlayer.playVideo();
+            } else if (ytPlayer.nextVideo) {
+                ytPlayer.nextVideo();
+                ytPlayer.playVideo(); 
+            }
+        });
+
+        document.getElementById('yt-btn-prev').addEventListener('click', () => {
+            if(!ytPlayer) return;
+            if (isLooping && ytPlayer.seekTo) {
+                ytPlayer.seekTo(0, true);
+                ytPlayer.playVideo();
+            } else if (ytPlayer.previousVideo) {
+                ytPlayer.previousVideo();
+                ytPlayer.playVideo(); 
+            }
+        });
+
+        ytVolume.addEventListener('input', (e) => {
+            if(ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(e.target.value);
+        });
+
+        ytProgress.addEventListener('input', (e) => {
+            const seekToTime = parseFloat(e.target.value);
+            ytCurrentTimeText.textContent = formatYTTime(seekToTime);
+            if (ytPlayer && ytPlayer.seekTo) {
+                 ytPlayer.seekTo(seekToTime, true); 
+            }
+        });
+
+        document.getElementById('yt-btn-shuffle').addEventListener('click', function() {
+            if(!ytPlayer || !ytPlayer.setShuffle) return;
+            isShuffled = !isShuffled;
+            ytPlayer.setShuffle(isShuffled);
+            this.classList.toggle('text-primary');
+            this.classList.toggle('text-textGray');
+        });
+
+        document.getElementById('yt-btn-loop').addEventListener('click', function() {
+            isLooping = !isLooping; 
+            this.classList.toggle('text-primary');
+            this.classList.toggle('text-textGray');
+        });
+
+        ytCloseBtn.addEventListener('click', () => {
+            if (ytPlayer) {
+                ytPlayer.pauseVideo();
+                ytPlayer.destroy();
+                ytPlayer = null;
+            }
+            clearInterval(progressInterval);
+            ytCustomPlayer.classList.replace('flex', 'hidden');
+            ytInputContainer.classList.remove('hidden');
+            ytInput.value = '';
+            ytProgress.value = 0;
+            ytCurrentTimeText.textContent = '0:00';
+            ytDurationText.textContent = '0:00';
+            
+            isLooping = false;
+            isShuffled = false;
+            document.getElementById('yt-btn-loop').classList.remove('text-primary');
+            document.getElementById('yt-btn-loop').classList.add('text-textGray');
+            document.getElementById('yt-btn-shuffle').classList.remove('text-primary');
+            document.getElementById('yt-btn-shuffle').classList.add('text-textGray');
+        });
+
+        // === ONBOARDING (GUIA) ===
+        const btnHelp = document.getElementById('btn-help');
+
+        function openOnboarding() {
+            const onboarding = document.getElementById('onboarding-overlay');
+            onboarding.style.display = 'flex'; 
+            setTimeout(() => {
+                onboarding.classList.remove('opacity-0', 'invisible');
+            }, 10); 
+            nextStep(1); 
+        }
+
         function checkOnboarding() {
             const tourCompleted = localStorage.getItem('lk_tour_completed');
             if (!tourCompleted) {
@@ -295,11 +632,11 @@
             }
         }
 
-        // Controle dos botões Next e Pular
         function nextStep(step) {
             document.getElementById('ob-step-1').classList.add('hidden');
             document.getElementById('ob-step-2').classList.add('hidden');
             document.getElementById('ob-step-3').classList.add('hidden');
+            document.getElementById('ob-step-4').classList.add('hidden'); 
             
             document.getElementById(`ob-step-${step}`).classList.remove('hidden');
             
@@ -313,7 +650,6 @@
             }
         }
 
-        // Fechar e ocultar onboarding
         function closeOnboarding() {
             localStorage.setItem('lk_tour_completed', 'true');
             const onboarding = document.getElementById('onboarding-overlay');
@@ -323,25 +659,23 @@
             }, 500);
         }
 
-        // Evento do botão de ajuda no header
         btnHelp.addEventListener('click', openOnboarding);
 
 
-        // === NAVEGAÇÃO ENTRE TELAS (TABS) ===
+        // === NAVEGAÇÃO TABS ===
         const navTimer = document.getElementById('nav-timer');
         const navStats = document.getElementById('nav-stats');
         const navProfile = document.getElementById('nav-profile');
-        
         const screenTimer = document.getElementById('screen-timer');
         const screenWip = document.getElementById('screen-wip');
 
         function setNavActive(activeBtn) {
             [navTimer, navStats, navProfile].forEach(btn => {
-                btn.classList.remove('bg-[var(--primary-bg)]', 'text-primary', 'rounded-xl');
+                btn.classList.remove('bg-[var(--primary-bg)]', 'text-primary', 'rounded-xl', 'md:rounded-2xl');
                 btn.classList.add('text-textGray', 'hover:text-[var(--text-main)]');
             });
             activeBtn.classList.remove('text-textGray', 'hover:text-[var(--text-main)]');
-            activeBtn.classList.add('bg-[var(--primary-bg)]', 'text-primary', 'rounded-xl');
+            activeBtn.classList.add('bg-[var(--primary-bg)]', 'text-primary', 'rounded-xl', 'md:rounded-2xl');
         }
 
         navTimer.onclick = () => {
@@ -353,6 +687,7 @@
         };
 
         const showWipScreen = (btn) => {
+            if(isRunning) return; 
             setNavActive(btn);
             screenTimer.classList.add('hidden');
             screenTimer.classList.remove('flex');
@@ -363,7 +698,7 @@
         navStats.onclick = () => showWipScreen(navStats);
         navProfile.onclick = () => showWipScreen(navProfile);
 
-        // === CONTROLE DO MODAL, TEMA E CORES ===
+        // === CONFIGURAÇÕES, TEMAS E CORES ===
         const settingsModal = document.getElementById('settings-modal');
         const btnSettings = document.getElementById('btn-settings');
         const closeSettings = document.getElementById('close-settings');
@@ -403,7 +738,7 @@
             });
         }
 
-        // === LÓGICA DO GERADOR DE RIMAS ===
+        // === LÓGICA DO GERADOR DE RIMAS E DEEP FOCUS ===
         let words = [];
         let usedWords = [];
         let timerInterval;
@@ -417,6 +752,7 @@
 
         const timerDisplay = document.getElementById('timer');
         const wordDisplay = document.getElementById('word-display');
+        const wordDisplayContainer = document.getElementById('word-display-container');
         const mainBtn = document.getElementById('main-btn'); 
         
         const btnEasy = document.getElementById('btn-easy');
@@ -431,6 +767,10 @@
         
         const overlay = document.getElementById('countdown-overlay');
         const countdownText = document.getElementById('countdown-text');
+
+        const mainHeader = document.getElementById('main-header');
+        const configSection = document.getElementById('config-section');
+        const bottomNav = document.getElementById('bottom-nav');
 
         const timeActive = ['border-primary', 'bg-[var(--primary-bg)]', 'text-primary'];
         const timeInactive = ['border-transparent', 'bg-surface', 'text-[var(--text-main)]'];
@@ -462,31 +802,37 @@
         btnEasy.addEventListener('click', () => {
             if(isRunning) return;
             isHardMode = false;
-            
             btnEasy.classList.remove(...diffInactive);
             btnEasy.classList.add(...diffActive);
-            
             btnHard.classList.remove(...diffActive);
             btnHard.classList.add(...diffInactive);
-            
             modeInfo.textContent = "palavras a cada 10 segundos";
         });
 
         btnHard.addEventListener('click', () => {
             if(isRunning) return;
             isHardMode = true;
-            
             btnHard.classList.remove(...diffInactive);
             btnHard.classList.add(...diffActive);
-            
             btnEasy.classList.remove(...diffActive);
             btnEasy.classList.add(...diffInactive);
-            
             modeInfo.textContent = "palavras a cada 5 segundos";
         });
 
         function toggleControls(disabledState) {
             [btn1m, btn5m, btn10m, btnEasy, btnHard].forEach(btn => {
+                btn.disabled = disabledState;
+                if(disabledState) {
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            });
+            ytInput.disabled = disabledState;
+            ytLoadBtn.disabled = disabledState;
+            
+            const suggestionBtns = document.querySelectorAll('#yt-input-container button[onclick^="loadSuggestion"]');
+            suggestionBtns.forEach(btn => {
                 btn.disabled = disabledState;
                 if(disabledState) {
                     btn.classList.add('opacity-50', 'cursor-not-allowed');
@@ -504,7 +850,6 @@
                 if (!response.ok) throw new Error("Arquivo palavras.txt não encontrado na pasta.");
                 
                 const text = await response.text();
-                
                 words = text.split('\n')
                             .map(w => w.split(',')[0].split('\t')[0].trim())
                             .filter(w => w.length > 0)
@@ -512,23 +857,14 @@
                 
                 statusElement.previousElementSibling.textContent = "description"; 
                 statusElement.textContent = `${words.length.toLocaleString('pt-BR')} palavras.`;
-                
                 mainBtn.disabled = false;
-
             } catch (error) {
                 console.error("Erro ao ler arquivo local:", error);
                 words = ["foco", "ritmo", "mente", "força", "agora", "exemplo", "tempo", "história", "pessoa", "jeito", "coisa", "dia", "homem", "senhor", "ano"];
-                
                 statusElement.previousElementSibling.textContent = "error";
                 statusElement.textContent = "Arquivo local não encontrado. Usando fallback.";
                 mainBtn.disabled = false;
             }
-        }
-
-        function formatTime(seconds) {
-            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
-            const s = (seconds % 60).toString().padStart(2, '0');
-            return `${m}:${s}`;
         }
 
         function generateWord() {
@@ -545,6 +881,10 @@
             if (usedWords.length > 150) usedWords.shift();
 
             wordDisplay.textContent = word;
+
+            wordDisplay.classList.remove('animate-pop');
+            void wordDisplay.offsetWidth; 
+            wordDisplay.classList.add('animate-pop');
         }
 
         function stopCycle() {
@@ -555,15 +895,21 @@
             
             toggleControls(false);
 
-            mainBtn.innerHTML = 'INICIAR';
+            mainBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] md:text-[24px]">play_arrow</span> INICIAR';
             mainBtn.classList.remove(...btnStopClasses);
             mainBtn.classList.add(...btnStartClasses);
 
             wordDisplay.textContent = "";
+            wordDisplay.classList.remove('animate-pop');
             timerDisplay.textContent = formatTime(selectedTime);
             
             overlay.classList.remove('opacity-100', 'visible');
             overlay.classList.add('opacity-0', 'invisible');
+
+            wordDisplayContainer.classList.replace('flex', 'hidden');
+            mainHeader.classList.remove('hidden');
+            configSection.classList.remove('hidden');
+            bottomNav.classList.remove('hidden');
         }
 
         function triggerAnimation() {
@@ -578,7 +924,7 @@
             
             toggleControls(true);
 
-            mainBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">stop_circle</span> PARAR SESSÃO';
+            mainBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] md:text-[24px]">stop_circle</span> PARAR SESSÃO';
             mainBtn.classList.remove(...btnStartClasses);
             mainBtn.classList.add(...btnStopClasses);
 
@@ -592,6 +938,11 @@
             overlay.classList.add('opacity-100', 'visible');
             triggerAnimation(); 
             
+            wordDisplayContainer.classList.replace('hidden', 'flex');
+            mainHeader.classList.add('hidden');
+            configSection.classList.add('hidden');
+            bottomNav.classList.add('hidden');
+            
             countdownInterval = setInterval(() => {
                 count--;
                 if (count > 0) {
@@ -599,8 +950,16 @@
                     triggerAnimation(); 
                 } else {
                     clearInterval(countdownInterval);
-                    overlay.classList.remove('opacity-100', 'visible');
-                    overlay.classList.add('opacity-0', 'invisible');
+                    
+                    // Suaviza a saída do overlay sem "engolir" a animação da contagem
+                    overlay.classList.remove('opacity-100');
+                    overlay.classList.add('opacity-0');
+                    
+                    setTimeout(() => {
+                        overlay.classList.remove('visible');
+                        overlay.classList.add('invisible');
+                    }, 300); // 300ms é o tempo da transição no Tailwind
+                    
                     startCycle();
                 }
             }, 1000);
@@ -619,7 +978,8 @@
                 
                 if (timeLeft <= 0) {
                     stopCycle();
-                    wordDisplay.textContent = "Sessão Concluída!";
+                    wordDisplayContainer.classList.replace('hidden', 'flex');
+                    wordDisplay.textContent = "CONCLUÍDO";
                 }
             }, 1000);
         }
@@ -632,10 +992,9 @@
             }
         });
 
-        // Evento que Roda Assim Que a Janela Carrega
         window.addEventListener('DOMContentLoaded', () => {
             loadDictionary();
-            checkOnboarding(); // Inicia a verificação do tour
+            checkOnboarding(); 
         });
     </script>
 </body>
