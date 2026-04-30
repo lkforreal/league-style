@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        background: "var(--bg-color, #0d0d0d)",
+                        surface: "var(--surface-color, #1a1a1a)",
+                        primary: "var(--primary-color, #A855F7)",
+                        onPrimary: "var(--on-primary, #121212)",
+                        textGray: "#888888"
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Sistema de Variáveis CSS para proteger o seu layout */
+        :root {
+            --primary-color: #A855F7;
+            --primary-glow: rgba(168, 85, 247, 0.25);
+            --primary-glow-strong: rgba(168, 85, 247, 0.6);
+            --primary-bg: rgba(168, 85, 247, 0.15);
+            
+            --bg-color: #121212;
+            --surface-color: #1a1a1a;
+            --text-main: #d1d5db; /* gray-300 */
+            --text-white: #ffffff;
+            --border-color: rgba(255, 255, 255, 0.05);
+            --hover-bg: rgba(255, 255, 255, 0.05);
+            --on-primary: #121212;
+        }
+
+        body.light-mode {
+            --bg-color: #f3f4f6;
+            --surface-color: #ffffff;
+            --text-main: #4b5563;
+            --text-white: #111827;
+            --border-color: rgba(0, 0, 0, 0.1);
+            --hover-bg: rgba(0, 0, 0, 0.05);
+            --on-primary: #ffffff;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .timer-glow { box-shadow: 0 0 60px var(--primary-glow); }
+        .text-glow-strong { filter: drop-shadow(0 0 40px var(--primary-glow-strong)); }
+        .btn-glow { box-shadow: 0 0 30px var(--primary-glow); }
+        .btn-glow:hover { box-shadow: 0 0 40px var(--primary-glow-strong); }
+
+        @keyframes pulse-countdown {
+            0% { transform: scale(0.5); opacity: 0; }
+            15% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.85); opacity: 0; }
+        }
+        .animate-pulse-countdown {
+            animation: pulse-countdown 1s ease-out forwards;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-[var(--text-main)] font-sans h-[100dvh] flex flex-col items-center overflow-hidden selection:bg-primary/30 transition-colors duration-300">
+
+    <!-- ONBOARDING (TOUR INICIAL) -->
+    <div id="onboarding-overlay" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[3000] flex items-center justify-center opacity-0 invisible transition-all duration-500">
+        <div class="bg-surface w-full max-w-[340px] rounded-[32px] p-8 border border-[var(--border-color)] shadow-2xl mx-4 relative overflow-hidden flex flex-col items-center">
+            
+            <!-- Step 1 -->
+            <div id="ob-step-1" class="w-full flex flex-col items-center transition-all duration-300">
+                <div class="w-16 h-16 rounded-full bg-[var(--primary-bg)] flex items-center justify-center mb-6">
+                    <span class="material-symbols-outlined text-4xl text-primary" style="filter: drop-shadow(0 0 10px var(--primary-glow-strong));">mic</span>
+                </div>
+                <h2 class="text-2xl font-bold text-[var(--text-white)] text-center mb-3">Bem-vindo(a)!</h2>
+                <p class="text-sm text-textGray text-center mb-8 leading-relaxed">O <strong>3-2-1</strong> é o seu novo parceiro de treino para batalhas de rima, improviso e criatividade.</p>
+                <button onclick="nextStep(2)" class="w-full h-12 rounded-xl bg-primary text-onPrimary font-bold text-sm btn-glow transition-all active:scale-95 uppercase tracking-wider">COMEÇAR TOUR</button>
+            </div>
+
+            <!-- Step 2 -->
+            <div id="ob-step-2" class="w-full flex flex-col items-center hidden transition-all duration-300">
+                <div class="w-16 h-16 rounded-full bg-[var(--primary-bg)] flex items-center justify-center mb-6">
+                    <span class="material-symbols-outlined text-4xl text-primary" style="filter: drop-shadow(0 0 10px var(--primary-glow-strong));">timer</span>
+                </div>
+                <h2 class="text-2xl font-bold text-[var(--text-white)] text-center mb-3">Treino de Foco</h2>
+                <p class="text-sm text-textGray text-center mb-8 leading-relaxed">No modo <strong>Easy</strong>, uma nova palavra surge a cada 10s. No <strong>Hard</strong>, o desafio aumenta para 5s. Escolha seu tempo e solte a voz.</p>
+                <div class="w-full flex gap-3">
+                    <button onclick="closeOnboarding()" class="flex-1 h-12 rounded-xl bg-transparent border border-[var(--border-color)] text-textGray font-bold text-xs hover:bg-[var(--hover-bg)] transition-all active:scale-95 uppercase tracking-wider">Pular</button>
+                    <button onclick="nextStep(3)" class="flex-1 h-12 rounded-xl bg-primary text-onPrimary font-bold text-xs btn-glow transition-all active:scale-95 uppercase tracking-wider">Próximo</button>
+                </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div id="ob-step-3" class="w-full flex flex-col items-center hidden transition-all duration-300">
+                <div class="w-16 h-16 rounded-full bg-[var(--primary-bg)] flex items-center justify-center mb-6">
+                    <span class="material-symbols-outlined text-4xl text-primary" style="filter: drop-shadow(0 0 10px var(--primary-glow-strong));">palette</span>
+                </div>
+                <h2 class="text-2xl font-bold text-[var(--text-white)] text-center mb-3">Seu Estilo</h2>
+                <p class="text-sm text-textGray text-center mb-8 leading-relaxed">Clique no ícone de <strong>Paleta</strong> no topo da tela a qualquer momento para personalizar o tema (claro/escuro) e as cores de destaque.</p>
+                <button onclick="closeOnboarding()" class="w-full h-12 rounded-xl bg-primary text-onPrimary font-bold text-sm btn-glow transition-all active:scale-95 uppercase tracking-wider">VAMOS LÁ!</button>
+            </div>
+
+            <!-- Dots -->
+            <div class="flex justify-center gap-2 mt-8" id="ob-dots">
+                <div class="w-4 h-1.5 rounded-full bg-primary transition-all duration-300"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-[var(--border-color)] transition-all duration-300"></div>
+                <div class="w-1.5 h-1.5 rounded-full bg-[var(--border-color)] transition-all duration-300"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay de Countdown -->
+    <div id="countdown-overlay" class="fixed inset-0 bg-background/80 backdrop-blur-md flex items-center justify-center z-[1000] opacity-0 invisible transition-all duration-300">
+        <div id="countdown-text" class="text-[10rem] font-black text-primary text-glow-strong">3</div>
+    </div>
+
+    <!-- MODAL DE CONFIGURAÇÕES -->
+    <div id="settings-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[2000] flex items-center justify-center opacity-0 invisible transition-all duration-300">
+        <div class="bg-surface w-full max-w-[340px] rounded-[32px] p-6 border border-[var(--border-color)] shadow-2xl mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-[var(--text-white)]">Aparência</h2>
+                <button id="close-settings" class="text-textGray hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Tema -->
+                <div class="space-y-3">
+                    <span class="text-[10px] font-bold tracking-wider text-textGray uppercase">Tema do Sistema</span>
+                    <div class="flex p-1 gap-1 rounded-xl bg-[var(--border-color)] border border-[var(--border-color)]">
+                        <button id="theme-dark" class="flex-1 py-2 rounded-lg bg-primary text-onPrimary text-xs font-bold transition-all">Escuro</button>
+                        <button id="theme-light" class="flex-1 py-2 rounded-lg text-textGray text-xs font-medium transition-all">Claro</button>
+                    </div>
+                </div>
+
+                <!-- Cores -->
+                <div class="space-y-3">
+                    <span class="text-[10px] font-bold tracking-wider text-textGray uppercase">Cor de Destaque</span>
+                    <div class="flex justify-between gap-2">
+                        <button data-color="#A855F7" onclick="changeColor('#A855F7', 'rgba(168, 85, 247, 0.25)', 'rgba(168, 85, 247, 0.6)', 'rgba(168, 85, 247, 0.15)')" class="color-btn w-8 h-8 rounded-full bg-[#A855F7] border-2 border-[var(--border-color)] hover:scale-110 transition-transform"></button>
+                        <button data-color="#3B82F6" onclick="changeColor('#3B82F6', 'rgba(59, 130, 246, 0.25)', 'rgba(59, 130, 246, 0.6)', 'rgba(59, 130, 246, 0.15)')" class="color-btn w-8 h-8 rounded-full bg-[#3B82F6] border-2 border-transparent hover:scale-110 transition-transform"></button>
+                        <button data-color="#EF4444" onclick="changeColor('#EF4444', 'rgba(239, 68, 68, 0.25)', 'rgba(239, 68, 68, 0.6)', 'rgba(239, 68, 68, 0.15)')" class="color-btn w-8 h-8 rounded-full bg-[#EF4444] border-2 border-transparent hover:scale-110 transition-transform"></button>
+                        <button data-color="#10B981" onclick="changeColor('#10B981', 'rgba(16, 185, 129, 0.25)', 'rgba(16, 185, 129, 0.6)', 'rgba(16, 185, 129, 0.15)')" class="color-btn w-8 h-8 rounded-full bg-[#10B981] border-2 border-transparent hover:scale-110 transition-transform"></button>
+                        <button data-color="#F59E0B" onclick="changeColor('#F59E0B', 'rgba(245, 158, 11, 0.25)', 'rgba(245, 158, 11, 0.6)', 'rgba(245, 158, 11, 0.15)')" class="color-btn w-8 h-8 rounded-full bg-[#F59E0B] border-2 border-transparent hover:scale-110 transition-transform"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header (Com botões Ajuda e Paleta de Temas) -->
+    <header class="w-full flex justify-between items-center px-6 h-14 max-w-[480px] mx-auto shrink-0">
+        <span class="text-lg font-bold tracking-tight text-primary">3-2-1 | by @lkforeal</span>
+        <div class="flex items-center gap-4 text-textGray">
+            <button id="btn-help" class="hover:text-primary transition-colors active:scale-95 duration-200">
+                <span class="material-symbols-outlined text-[24px]">help</span>
+            </button>
+            <button id="btn-settings" class="hover:text-primary transition-colors active:scale-95 duration-200">
+                <span class="material-symbols-outlined text-[24px]">palette</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- TELA 1: TIMER (Principal) -->
+    <main id="screen-timer" class="flex-1 w-full max-w-[400px] px-6 py-2 flex flex-col items-center justify-evenly z-10 relative transition-all duration-300">
+        
+        <div class="relative w-48 h-48 flex items-center justify-center timer-glow rounded-full border-[5px] border-primary shrink-0 transition-all duration-300" id="timer-ring">
+            <div class="text-center z-10 flex flex-col items-center justify-center mt-1">
+                <h1 id="timer" class="text-5xl font-bold tracking-tight text-[var(--text-white)] transition-colors" style="font-variant-numeric: tabular-nums;">05:00</h1>
+                <p class="text-[9px] font-bold tracking-[0.1em] text-primary mt-1 uppercase">RESTANTE</p>
+            </div>
+        </div>
+
+        <div id="word-display-container" class="w-full min-h-[2.5rem] flex items-center justify-center">
+            <div id="word-display" class="text-3xl font-semibold text-[var(--text-white)] transition-colors text-center break-words lowercase tracking-wide">
+            </div>
+        </div>
+
+        <div class="w-full flex flex-col items-center">
+            <button id="main-btn" disabled class="w-full h-12 rounded-xl bg-primary text-onPrimary font-bold tracking-widest uppercase active:scale-95 transition-all btn-glow disabled:opacity-50 disabled:cursor-not-allowed border border-transparent flex items-center justify-center gap-2 text-sm">
+                INICIAR
+            </button>
+        </div>
+
+        <div class="w-full space-y-4 pt-1">
+            <div class="space-y-2">
+                <span class="text-[9px] font-bold tracking-wider text-textGray uppercase">Selecionar Tempo</span>
+                <div class="flex justify-between gap-2">
+                    <button id="btn-1m" class="flex-1 py-2 rounded-xl border border-transparent bg-surface text-[var(--text-main)] hover:bg-[var(--hover-bg)] transition-all active:scale-95 text-xs font-medium">
+                        1 Min
+                    </button>
+                    <button id="btn-5m" class="flex-1 py-2 rounded-xl border border-primary bg-[var(--primary-bg)] text-primary transition-all active:scale-95 text-xs font-medium">
+                        5 Min
+                    </button>
+                    <button id="btn-10m" class="flex-1 py-2 rounded-xl border border-transparent bg-surface text-[var(--text-main)] hover:bg-[var(--hover-bg)] transition-all active:scale-95 text-xs font-medium">
+                        10 Min
+                    </button>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <span class="text-[9px] font-bold tracking-wider text-textGray uppercase">Dificuldade</span>
+                <div class="flex p-1 gap-1 rounded-xl bg-surface border border-[var(--border-color)]">
+                    <button id="btn-easy" class="flex-1 py-1.5 rounded-lg bg-primary text-onPrimary shadow-lg transition-all text-xs font-bold">
+                        Easy
+                    </button>
+                    <button id="btn-hard" class="flex-1 py-1.5 rounded-lg text-textGray hover:text-[var(--text-main)] transition-all text-xs font-medium">
+                        Hard
+                    </button>
+                </div>
+            </div>
+
+            <div class="w-full h-px bg-[var(--border-color)] my-2"></div>
+
+            <div class="flex flex-col items-center space-y-1 pb-2">
+                <div class="flex items-center gap-2 text-xs text-textGray">
+                    <span class="material-symbols-outlined text-[14px]">cloud_off</span>
+                    <span id="status">Carregando dicionário...</span>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-textGray">
+                    <span class="material-symbols-outlined text-[14px]">text_snippet</span>
+                    <span id="mode-info">palavras a cada 10 segundos</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- TELA 2: EM DESENVOLVIMENTO (Oculta por padrão) -->
+    <main id="screen-wip" class="hidden flex-1 w-full max-w-[400px] px-6 py-2 flex-col items-center justify-center z-10 relative">
+        <div class="flex flex-col items-center justify-center p-8 rounded-[32px] bg-surface border border-[var(--border-color)] shadow-xl text-center w-full">
+            <div class="relative w-20 h-20 mb-6 flex items-center justify-center rounded-full bg-[var(--primary-bg)]">
+                <span class="material-symbols-outlined text-4xl text-primary animate-pulse" style="filter: drop-shadow(0 0 15px var(--primary-glow-strong));">construction</span>
+            </div>
+            <h2 class="text-xl font-bold text-[var(--text-white)] tracking-wide mb-2">Em Desenvolvimento</h2>
+            <p class="text-xs text-textGray leading-relaxed">Esta tela está sendo forjada na oficina.<br>Novidades chegarão em breve!</p>
+        </div>
+    </main>
+
+    <!-- Nav (Reorganizada para Status, Timer, Perfil) -->
+    <nav class="w-full max-w-[480px] mx-auto flex justify-around items-center h-16 px-4 bg-surface/50 backdrop-blur-xl rounded-t-[24px] border-t border-[var(--border-color)] shrink-0">
+        
+        <!-- Botão Status -->
+        <button id="nav-stats" class="flex flex-col items-center justify-center text-textGray hover:text-[var(--text-main)] w-14 h-12 active:scale-90 transition-all">
+            <span class="material-symbols-outlined text-[20px]">bar_chart</span>
+            <span class="text-[8px] font-medium uppercase tracking-wider mt-0.5">Status</span>
+        </button>
+        
+        <!-- Botão Timer (Ativo por padrão) -->
+        <button id="nav-timer" class="flex flex-col items-center justify-center bg-[var(--primary-bg)] text-primary rounded-xl w-14 h-12 active:scale-90 transition-all">
+            <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">timer</span>
+            <span class="text-[8px] font-bold uppercase tracking-wider mt-0.5">Timer</span>
+        </button>
+
+        <!-- Botão Perfil -->
+        <button id="nav-profile" class="flex flex-col items-center justify-center text-textGray hover:text-[var(--text-main)] w-14 h-12 active:scale-90 transition-all">
+            <span class="material-symbols-outlined text-[20px]">person</span>
+            <span class="text-[8px] font-medium uppercase tracking-wider mt-0.5">Perfil</span>
+        </button>
+        
+    </nav>
+
+    <script>
+        // === TOUR INICIAL (ONBOARDING) ===
+        const btnHelp = document.getElementById('btn-help');
+
+        // Função para abrir o onboarding manualmente ou automaticamente
+        function openOnboarding() {
+            const onboarding = document.getElementById('onboarding-overlay');
+            onboarding.style.display = 'flex'; // Restaura o display
+            setTimeout(() => {
+                onboarding.classList.remove('opacity-0', 'invisible');
+            }, 10); // Pequeno atraso para a animação ocorrer
+            nextStep(1); // Força abrir no passo 1
+        }
+
+        // Verifica na primeira inicialização
+        function checkOnboarding() {
+            const tourCompleted = localStorage.getItem('lk_tour_completed');
+            if (!tourCompleted) {
+                openOnboarding();
+            } else {
+                document.getElementById('onboarding-overlay').style.display = 'none';
+            }
+        }
+
+        // Controle dos botões Next e Pular
+        function nextStep(step) {
+            document.getElementById('ob-step-1').classList.add('hidden');
+            document.getElementById('ob-step-2').classList.add('hidden');
+            document.getElementById('ob-step-3').classList.add('hidden');
+            
+            document.getElementById(`ob-step-${step}`).classList.remove('hidden');
+            
+            const dots = document.getElementById('ob-dots').children;
+            for(let i=0; i<dots.length; i++) {
+                if(i === step - 1) {
+                    dots[i].className = "w-4 h-1.5 rounded-full bg-primary transition-all duration-300";
+                } else {
+                    dots[i].className = "w-1.5 h-1.5 rounded-full bg-[var(--border-color)] transition-all duration-300";
+                }
+            }
+        }
+
+        // Fechar e ocultar onboarding
+        function closeOnboarding() {
+            localStorage.setItem('lk_tour_completed', 'true');
+            const onboarding = document.getElementById('onboarding-overlay');
+            onboarding.classList.add('opacity-0', 'invisible');
+            setTimeout(() => {
+                onboarding.style.display = 'none';
+            }, 500);
+        }
+
+        // Evento do botão de ajuda no header
+        btnHelp.addEventListener('click', openOnboarding);
+
+
+        // === NAVEGAÇÃO ENTRE TELAS (TABS) ===
+        const navTimer = document.getElementById('nav-timer');
+        const navStats = document.getElementById('nav-stats');
+        const navProfile = document.getElementById('nav-profile');
+        
+        const screenTimer = document.getElementById('screen-timer');
+        const screenWip = document.getElementById('screen-wip');
+
+        function setNavActive(activeBtn) {
+            [navTimer, navStats, navProfile].forEach(btn => {
+                btn.classList.remove('bg-[var(--primary-bg)]', 'text-primary', 'rounded-xl');
+                btn.classList.add('text-textGray', 'hover:text-[var(--text-main)]');
+            });
+            activeBtn.classList.remove('text-textGray', 'hover:text-[var(--text-main)]');
+            activeBtn.classList.add('bg-[var(--primary-bg)]', 'text-primary', 'rounded-xl');
+        }
+
+        navTimer.onclick = () => {
+            setNavActive(navTimer);
+            screenWip.classList.add('hidden');
+            screenWip.classList.remove('flex');
+            screenTimer.classList.remove('hidden');
+            screenTimer.classList.add('flex');
+        };
+
+        const showWipScreen = (btn) => {
+            setNavActive(btn);
+            screenTimer.classList.add('hidden');
+            screenTimer.classList.remove('flex');
+            screenWip.classList.remove('hidden');
+            screenWip.classList.add('flex');
+        };
+
+        navStats.onclick = () => showWipScreen(navStats);
+        navProfile.onclick = () => showWipScreen(navProfile);
+
+        // === CONTROLE DO MODAL, TEMA E CORES ===
+        const settingsModal = document.getElementById('settings-modal');
+        const btnSettings = document.getElementById('btn-settings');
+        const closeSettings = document.getElementById('close-settings');
+        
+        btnSettings.addEventListener('click', () => settingsModal.classList.remove('opacity-0', 'invisible'));
+        closeSettings.addEventListener('click', () => settingsModal.classList.add('opacity-0', 'invisible'));
+
+        const themeDark = document.getElementById('theme-dark');
+        const themeLight = document.getElementById('theme-light');
+
+        themeDark.addEventListener('click', () => {
+            document.body.classList.remove('light-mode');
+            themeDark.className = "flex-1 py-2 rounded-lg bg-primary text-onPrimary text-xs font-bold transition-all";
+            themeLight.className = "flex-1 py-2 rounded-lg text-textGray text-xs font-medium transition-all";
+        });
+
+        themeLight.addEventListener('click', () => {
+            document.body.classList.add('light-mode');
+            themeLight.className = "flex-1 py-2 rounded-lg bg-primary text-onPrimary text-xs font-bold transition-all";
+            themeDark.className = "flex-1 py-2 rounded-lg text-textGray text-xs font-medium transition-all";
+        });
+
+        function changeColor(hex, glow, glowStrong, bg) {
+            document.documentElement.style.setProperty('--primary-color', hex);
+            document.documentElement.style.setProperty('--primary-glow', glow);
+            document.documentElement.style.setProperty('--primary-glow-strong', glowStrong);
+            document.documentElement.style.setProperty('--primary-bg', bg);
+            
+            document.querySelectorAll('.color-btn').forEach(btn => {
+                if(btn.dataset.color === hex) {
+                    btn.classList.remove('border-transparent');
+                    btn.classList.add('border-[var(--border-color)]');
+                } else {
+                    btn.classList.remove('border-[var(--border-color)]');
+                    btn.classList.add('border-transparent');
+                }
+            });
+        }
+
+        // === LÓGICA DO GERADOR DE RIMAS ===
+        let words = [];
+        let usedWords = [];
+        let timerInterval;
+        let wordInterval;
+        let countdownInterval;
+        
+        let selectedTime = 300; 
+        let timeLeft = 300;
+        let isRunning = false;
+        let isHardMode = false;
+
+        const timerDisplay = document.getElementById('timer');
+        const wordDisplay = document.getElementById('word-display');
+        const mainBtn = document.getElementById('main-btn'); 
+        
+        const btnEasy = document.getElementById('btn-easy');
+        const btnHard = document.getElementById('btn-hard');
+        
+        const btn1m = document.getElementById('btn-1m');
+        const btn5m = document.getElementById('btn-5m');
+        const btn10m = document.getElementById('btn-10m');
+        
+        const modeInfo = document.getElementById('mode-info');
+        const statusDisplay = document.getElementById('status');
+        
+        const overlay = document.getElementById('countdown-overlay');
+        const countdownText = document.getElementById('countdown-text');
+
+        const timeActive = ['border-primary', 'bg-[var(--primary-bg)]', 'text-primary'];
+        const timeInactive = ['border-transparent', 'bg-surface', 'text-[var(--text-main)]'];
+
+        const diffActive = ['bg-primary', 'text-onPrimary', 'font-bold', 'shadow-lg'];
+        const diffInactive = ['text-textGray', 'hover:text-[var(--text-main)]', 'font-medium'];
+
+        const btnStartClasses = ['bg-primary', 'text-onPrimary', 'btn-glow', 'border-transparent'];
+        const btnStopClasses = ['bg-surface', 'text-[var(--text-main)]', 'border-[var(--border-color)]', 'hover:text-[var(--text-white)]', 'shadow-none'];
+
+        function setTimeSelection(seconds, activeBtn) {
+            if (isRunning) return;
+            selectedTime = seconds;
+            
+            [btn1m, btn5m, btn10m].forEach(btn => {
+                btn.classList.remove(...timeActive);
+                btn.classList.add(...timeInactive);
+            });
+            activeBtn.classList.remove(...timeInactive);
+            activeBtn.classList.add(...timeActive);
+            
+            timerDisplay.textContent = formatTime(selectedTime);
+        }
+
+        btn1m.addEventListener('click', () => setTimeSelection(60, btn1m));
+        btn5m.addEventListener('click', () => setTimeSelection(300, btn5m));
+        btn10m.addEventListener('click', () => setTimeSelection(600, btn10m));
+
+        btnEasy.addEventListener('click', () => {
+            if(isRunning) return;
+            isHardMode = false;
+            
+            btnEasy.classList.remove(...diffInactive);
+            btnEasy.classList.add(...diffActive);
+            
+            btnHard.classList.remove(...diffActive);
+            btnHard.classList.add(...diffInactive);
+            
+            modeInfo.textContent = "palavras a cada 10 segundos";
+        });
+
+        btnHard.addEventListener('click', () => {
+            if(isRunning) return;
+            isHardMode = true;
+            
+            btnHard.classList.remove(...diffInactive);
+            btnHard.classList.add(...diffActive);
+            
+            btnEasy.classList.remove(...diffActive);
+            btnEasy.classList.add(...diffInactive);
+            
+            modeInfo.textContent = "palavras a cada 5 segundos";
+        });
+
+        function toggleControls(disabledState) {
+            [btn1m, btn5m, btn10m, btnEasy, btnHard].forEach(btn => {
+                btn.disabled = disabledState;
+                if(disabledState) {
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            });
+        }
+
+        async function loadDictionary() {
+            const statusElement = document.querySelector('#status');
+            
+            try {
+                const response = await fetch('./palavras.txt');
+                if (!response.ok) throw new Error("Arquivo palavras.txt não encontrado na pasta.");
+                
+                const text = await response.text();
+                
+                words = text.split('\n')
+                            .map(w => w.split(',')[0].split('\t')[0].trim())
+                            .filter(w => w.length > 0)
+                            .slice(0, 20000);
+                
+                statusElement.previousElementSibling.textContent = "description"; 
+                statusElement.textContent = `${words.length.toLocaleString('pt-BR')} palavras.`;
+                
+                mainBtn.disabled = false;
+
+            } catch (error) {
+                console.error("Erro ao ler arquivo local:", error);
+                words = ["foco", "ritmo", "mente", "força", "agora", "exemplo", "tempo", "história", "pessoa", "jeito", "coisa", "dia", "homem", "senhor", "ano"];
+                
+                statusElement.previousElementSibling.textContent = "error";
+                statusElement.textContent = "Arquivo local não encontrado. Usando fallback.";
+                mainBtn.disabled = false;
+            }
+        }
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const s = (seconds % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function generateWord() {
+            let word;
+            let attempts = 0;
+            
+            do {
+                const randomIndex = Math.floor(Math.random() * words.length);
+                word = words[randomIndex];
+                attempts++;
+            } while (usedWords.includes(word) && attempts < 100);
+
+            usedWords.push(word);
+            if (usedWords.length > 150) usedWords.shift();
+
+            wordDisplay.textContent = word;
+        }
+
+        function stopCycle() {
+            clearInterval(countdownInterval);
+            clearInterval(timerInterval);
+            clearInterval(wordInterval);
+            isRunning = false;
+            
+            toggleControls(false);
+
+            mainBtn.innerHTML = 'INICIAR';
+            mainBtn.classList.remove(...btnStopClasses);
+            mainBtn.classList.add(...btnStartClasses);
+
+            wordDisplay.textContent = "";
+            timerDisplay.textContent = formatTime(selectedTime);
+            
+            overlay.classList.remove('opacity-100', 'visible');
+            overlay.classList.add('opacity-0', 'invisible');
+        }
+
+        function triggerAnimation() {
+            countdownText.classList.remove('animate-pulse-countdown');
+            void countdownText.offsetWidth; 
+            countdownText.classList.add('animate-pulse-countdown');
+        }
+
+        function startPreparation() {
+            if (isRunning) return;
+            isRunning = true;
+            
+            toggleControls(true);
+
+            mainBtn.innerHTML = '<span class="material-symbols-outlined text-[18px]">stop_circle</span> PARAR SESSÃO';
+            mainBtn.classList.remove(...btnStartClasses);
+            mainBtn.classList.add(...btnStopClasses);
+
+            timerDisplay.textContent = formatTime(selectedTime);
+            wordDisplay.textContent = ""; 
+            
+            let count = 3;
+            countdownText.textContent = count;
+            
+            overlay.classList.remove('opacity-0', 'invisible');
+            overlay.classList.add('opacity-100', 'visible');
+            triggerAnimation(); 
+            
+            countdownInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownText.textContent = count;
+                    triggerAnimation(); 
+                } else {
+                    clearInterval(countdownInterval);
+                    overlay.classList.remove('opacity-100', 'visible');
+                    overlay.classList.add('opacity-0', 'invisible');
+                    startCycle();
+                }
+            }, 1000);
+        }
+
+        function startCycle() {
+            timeLeft = selectedTime;
+            const wordDelay = isHardMode ? 5000 : 10000;
+
+            generateWord(); 
+            wordInterval = setInterval(generateWord, wordDelay);
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = formatTime(timeLeft);
+                
+                if (timeLeft <= 0) {
+                    stopCycle();
+                    wordDisplay.textContent = "Sessão Concluída!";
+                }
+            }, 1000);
+        }
+
+        mainBtn.addEventListener('click', () => {
+            if (isRunning) {
+                stopCycle();
+            } else {
+                startPreparation();
+            }
+        });
+
+        // Evento que Roda Assim Que a Janela Carrega
+        window.addEventListener('DOMContentLoaded', () => {
+            loadDictionary();
+            checkOnboarding(); // Inicia a verificação do tour
+        });
+    </script>
+</body>
+</html>
